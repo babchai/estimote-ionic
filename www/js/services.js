@@ -14,6 +14,25 @@ angular.module('starter.services', [])
 	// Ranging callback.
 	var onBeaconsRangedCallback = null;
 
+	//Monitoring callback.
+	var onBeaconsMonitorCallback = null;
+
+
+	function startMonitorRegion(success, error){
+		console.log("startMonitoring");
+		// Save reference to controller success callback.
+		onBeaconsMonitorCallback = success;
+
+		// Request permission from user to access location info.
+		// This is needed on iOS 8.
+		EstimoteBeacons.requestAlwaysAuthorization();
+
+		EstimoteBeacons.startMonitoringForRegion({}, 
+			onMonitor, 
+			onError);
+
+	}
+
 	function startRangingBeacons(success, error) {
 		// Save reference to controller success callback.
 		onBeaconsRangedCallback = success;
@@ -53,6 +72,20 @@ angular.module('starter.services', [])
 		return getBeaconData(beaconId, 'image');
 	}
 
+    function onMonitor(regionState)
+	{
+
+		//console.log("Monitor : " + JSON.stringify(regionState));
+		//displayRegionInfo(regionState);
+		onBeaconsMonitorCallback(regionState);
+	}
+
+	function onError(errorMessage)
+	{
+		console.log('Monitor error: ' + errorMessage);
+		return errorMessage;
+	}
+   
 	function onBeaconsRanged(beaconInfo) {
 		// Update beacon dictionary.
 		//console.log(JSON.stringify(beaconInfo));
@@ -114,6 +147,9 @@ angular.module('starter.services', [])
 		stopRangingBeacons: function() {
 			//console.log("stopRangingBeacons");
 			stopRangingBeacons();
+		},
+		startMonitorRegion : function(success, error){
+			startMonitorRegion(success, error);
 		},
 		get: function(beaconId) {
 

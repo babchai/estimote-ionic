@@ -9,8 +9,36 @@ angular.module('starter.controllers', [])
 .controller('BeaconsCtrl', function($scope, $rootScope, Beacons) {
    
 	function startRanging() {
-		Beacons.stopRangingBeacons();
+		//Beacons.stopRangingBeacons();
 		Beacons.startRangingBeacons(beaconsRanged, rangingError);
+	}
+
+   function stopRanging(){
+   		Beacons.stopRangingBeacons();
+   }
+
+	function startMonitorRegion(){
+		Beacons.startMonitorRegion(onMonitor, monitorError);
+	}
+
+	function onMonitor(regionState){
+		console.log(JSON.stringify(regionState));
+		if(regionState.state =="inside")
+		{
+			console.log("customer into mall.");
+            startRanging();
+		}
+		else
+		{
+			console.log("customer leave mall.");
+			stopRanging();
+		}
+
+	}
+
+	function monitorError(error){
+
+		console.log(error);
 	}
 
 	function beaconsRanged(beacons) {
@@ -32,7 +60,7 @@ angular.module('starter.controllers', [])
 
 	// Use 'deviceready' event to make sure plugins have loaded
 	// before starting ranging for beacons.
-	document.addEventListener('deviceready', startRanging, false);
+	document.addEventListener('deviceready', startMonitorRegion, false);
 })
 
 // Controller for beacon info page
