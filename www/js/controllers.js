@@ -6,10 +6,13 @@ angular.module('starter.controllers', [])
 .controller('InfoCtrl', function($scope) {})
 
 // Controller for page with list of beacons
-.controller('BeaconsCtrl', function($scope, $rootScope, Beacons) {
+.controller('BeaconsCtrl', function($scope, $rootScope, $ionicModal, $state, Beacons) {
+
+
    
+   $scope.alertMark = [];
 	function startRanging() {
-		//Beacons.stopRangingBeacons();
+		Beacons.stopRangingBeacons();
 		Beacons.startRangingBeacons(beaconsRanged, rangingError);
 	}
 
@@ -42,9 +45,77 @@ angular.module('starter.controllers', [])
 	}
 
 	function beaconsRanged(beacons) {
-		// Update beacon list.
-		//console.log(JSON.stringify(beacons));
-		 
+	
+       for(key in beacons)
+       {
+       	
+       	  if((beacons[key].id == "18774_17060" && beacons[key].proximity == 1))
+       	  {
+       	  	if($scope.alertMark.indexOf(beacons[key].id) < 0)
+       	  	{
+       	  		console.log("wall by gate")
+       	  		$scope.alertMark.push(beacons[key].id);
+       	  		alert("Welcome to HoboWorksop");
+       	  	}
+       	  }
+       	  else if((beacons[key].id == "18774_17060" &&  beacons[key].proximity != 1))
+       	  {
+
+	       	  	var index = $scope.alertMark.indexOf(beacons[key].id);
+
+				if(index!=-1){
+				   console.log("wall away from gate")
+				   $scope.alertMark.splice(index, 1);
+				}
+       	  }
+
+       	  if(beacons[key].id == "20718_65430" &&  beacons[key].proximity == 1)
+       	  {
+
+       	  	if($scope.alertMark.indexOf(beacons[key].id) < 0)
+       	  	{
+       	  	  console.log("near a item");
+       	  	  $scope.alertMark.push(beacons[key].id);
+       	  	  alert(beacons[key].title.line1 + " "+ beacons[key].title.line2);
+       	  	 // $state.go('#/tab/beacon-detail/'+beacons[key].id);
+
+       	  	}
+       	  }
+       	  else if((beacons[key].id == "20718_65430" &&  beacons[key].proximity != 1))
+       	  {
+
+	       	  	var index = $scope.alertMark.indexOf(beacons[key].id);
+
+				if(index!=-1){
+				   console.log("walk away from item");
+				   $scope.alertMark.splice(index, 1);
+				   $scope.$apply();
+				}
+       	  }
+
+
+       	  if(beacons[key].id == "25314_34247" && beacons[key].proximity == 1)
+       	  {
+       	  	if($scope.alertMark.indexOf(beacons[key].id) < 0)
+       	  	{
+       	  	   console.log("approaching payment counter");	
+       	      $scope.alertMark.push(beacons[key].id);
+       	  	  alert("Make payment");
+       	  	}
+       	  }
+       	  else if((beacons[key].id == "25314_34247" &&  beacons[key].proximity != 1))
+       	  {
+
+	       	  	var index = $scope.alertMark.indexOf(beacons[key].id);
+
+				if(index!=-1){
+					console.log("leaving payment counter");
+				   $scope.alertMark.splice(index, 1);
+				}
+       	  }
+
+       }
+
 		$scope.$apply(function() {
             //$scope.beacons = {};   
 			$scope.beacons = beacons;

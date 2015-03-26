@@ -75,7 +75,8 @@ angular.module('starter.services', [])
     function onMonitor(regionState)
 	{
 
-		//console.log("Monitor : " + JSON.stringify(regionState));
+		console.log("Monitor : " + JSON.stringify(regionState));
+		//console.log(regionState.major);
 		//displayRegionInfo(regionState);
 		onBeaconsMonitorCallback(regionState);
 	}
@@ -107,6 +108,7 @@ angular.module('starter.services', [])
 				items.push({
 					id: key,
 					distance: beacon.distance.toFixed(2),
+					proximity: beacon.proximity,
 					title: getBeaconTitle(key),
 					description: getBeaconDescription(key),
 					image: getBeaconImage(key)
